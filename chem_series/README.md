@@ -3,10 +3,10 @@
   2.) Click into the lib/ folder
 
 ## Purpose
-  To create a front end flutter app that will calculate the three series: Lyman, Balmer, Paschen.
+  To create a static flutter app that will calculate the three series: Lyman, Balmer, Paschen.
 
 ## Input
-  Number to determine series Balmer output
+  Number to determine each series output
 
 ## ORIGINAL Author
    My brother Matthew Badia originally wrote using python in the unix command line. 
