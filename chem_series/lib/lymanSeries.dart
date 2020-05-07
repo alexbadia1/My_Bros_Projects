@@ -1,6 +1,6 @@
 ///File: lymanSeries.dart
-///Purpose: To create a Balmer series (whatever that means).
-///Input: number to determine series Balmer output
+///Purpose: To create a Lyman series (whatever that means).
+///Input: number to determine series Lyman output
 ///Original Author: My brother Matthew Badia originally wrote using python
 ///in the unix command line. He's a chemist, not a programmer (That's where I come in).
 ///DISCLAIMER: ALL CREDIT goes to my brother who provided me with such calculations.

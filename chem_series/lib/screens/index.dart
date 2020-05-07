@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:string_validator/string_validator.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -7,61 +7,65 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _formKey = new GlobalKey<FormState>();
 
-  PanelController _controller = new PanelController();
   @override
   void initState() {
-      super.initState();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Series Calculator'),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
+    final _bottom = MediaQuery.of(context).viewInsets.bottom;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: _bottom),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Series Calculator'),
+          ),
+          body: Container(
             height: 500.0,
-            child: ListView.builder (
+            child: ListView.builder(
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
                   return SizedBox();
-                }
-            ),
+                }),
           ),
-          SlidingUpPanel(
-            controller: _controller,
-            isDraggable: false,
-            backdropEnabled: true,
-            backdropColor: Colors.black,
-            backdropOpacity: 0.8,
-            minHeight: MediaQuery.of(context).size.height * .0825,
-            maxHeight: MediaQuery.of(context).size.height * .0826,
-            collapsed: Container(
-              height: MediaQuery.of(context).size.height * .0875,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 6,
-                    child: Text('Creat new series'),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: FlatButton(
-                      child: Icon(Icons.add),
-                      onPressed: () => _controller.open(),
+          bottomNavigationBar: BottomAppBar(
+            child: Form(
+                key: _formKey,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        validator: (String value) {
+                          return (!isNull(value) && isNumeric(value)
+                              ? null
+                              : 'Please enter a whole number greater than 0.');
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Enter number here:',
+                        ),
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            panel: Container(),
-          ),
-        ],
-      )
+                    Container(
+                      child: IconButton(
+                        icon: Icon(Icons.chevron_right),
+                        onPressed: () {
+                          if (_formKey.currentState.validate() == null) {
+                            //Create the series
+
+
+                          } else {
+                            //Give a useful error message
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                )),
+          )),
     );
   }
 }
