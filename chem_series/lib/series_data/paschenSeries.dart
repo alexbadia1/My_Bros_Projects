@@ -9,7 +9,7 @@
 ///means on the level of my brother. I am just providing a better implementation than what
 ///my brother did.
 
-class Series {
+class PaschenSeries {
 
   //Initializing Rydberg's constant
   static const double RH = 1.097e7;
@@ -29,8 +29,7 @@ class Series {
   List<double> _lambda = [];
   List<double> _frequency = [];
 
-  Series(this._nInitial, this._nFinal, this._energy, this._lambda,
-      this._frequency, this._number, this._rawNumber);
+  PaschenSeries(this._number);
 
   set number(int value) {
     _number = value;

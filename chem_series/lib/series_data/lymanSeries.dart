@@ -1,6 +1,6 @@
-///File: balmerSeries.dart
-///Purpose: To create a Balmer series (whatever that means).
-///Input: number to determine series Balmer output
+///File: lymanSeries.dart
+///Purpose: To create a Lyman series (whatever that means).
+///Input: number to determine series Lyman output
 ///Original Author: My brother Matthew Badia originally wrote using python
 ///in the unix command line. He's a chemist, not a programmer (That's where I come in).
 ///DISCLAIMER: ALL CREDIT goes to my brother who provided me with such calculations.
@@ -9,7 +9,7 @@
 ///means on the level of my brother. I am just providing a better implementation than what
 ///my brother did.
 
-class Series {
+class LymanSeries {
 
   //Initializing Rydberg's constant
   static const double RH = 1.097e7;
@@ -29,8 +29,7 @@ class Series {
   List<double> _lambda = [];
   List<double> _frequency = [];
 
-  Series(this._nInitial, this._nFinal, this._energy, this._lambda,
-      this._frequency, this._number, this._rawNumber);
+  LymanSeries(this._number);
 
   set number(int value) {
     _number = value;
@@ -51,20 +50,20 @@ class Series {
   int get nInitial => _nInitial;
 
 
-  ///Calculate the lines for the Balmer Series.
+  ///Calculate the lines for the Lyman Series.
   ///Using the Rydberg equation 1/lambda = Rh (1/n1^2 - 1/n2^2)
   ///Where Rh is the Rydberg constant: 1.097e7.
   ///The equation is re-arranged to solve for lambda in nm.
-  void calculateBalmerSeries () {
+  void calculateLymanSeries () {
     //Set n(initial)
-    _nInitial = 2;
+    _nInitial = 1;
+
     //Setting n(final)
-    _nFinal = 2 + _number + 1;
+    _nFinal = 1 + _number + 1;
 
     for (int i = 0; i < _number; i++) {
       //Solving for wavelength, producing a raw_number that mut be converted.
-      //Using the formula: 1/a - 1/((a + b + 1) (a + b +1)) the spectra form can be calculated
-      double raw = (1.0 / (RH * (0.25 - (1.0 / ((2 + _number + 1) * (2 + _number + 1))))));
+      double raw =  (1.0 / (RH * (1 - 1.0 / ((1 + _number + 1) * (1 + _number + 1)))));
       _rawNumber.add(raw);
 
       //Converting the raw_number to wavelength in nm.
@@ -81,5 +80,5 @@ class Series {
       //The result is energy in Joules.
       _energy.add(tempFrequency * H);
     } //for
-  }//calculateBalmerSeries
+  }//calculateLymanSeries
 }//class
