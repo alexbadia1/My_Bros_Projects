@@ -1,9 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:chemseries/components/series_card.dart';
-import 'package:chemseries/series_data/lymanSeries.dart';
-import 'package:chemseries/series_data/balmerSeries.dart';
-import 'package:chemseries/series_data/paschenSeries.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,46 +9,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   final _formKey = new GlobalKey<FormState>();
-  int _input_num;
+  int _inputNum;
+  List<int> _seriesNumbers = [];
   List<Widget> _allSeries = [];
-  List<LymanSeries> _allLymanSeries = [];
-  List<BalmerSeries> _allBalmerSeries = [];
-  List<PaschenSeries> _allPaschenSeries = [];
 
-  bool duplicateLyman(){
+  bool duplicateSeries() {
     int pos = 0;
     bool found = false;
-    while (pos < _allLymanSeries.length && !found) {
-      if (_input_num == _allLymanSeries[pos].number) {
+    while (pos < _allSeries.length && !found) {
+      if (_inputNum == _seriesNumbers[pos]) {
         found = true;
-      } else pos++;
-    }//while
+      } else
+        pos++;
+    } //while
     return found;
-  }//duplicateLyman
-
-  bool duplicateBalmer(){
-    bool found = false;
-    int pos = 0;
-    while (pos < _allBalmerSeries.length && !found) {
-      if (_input_num == _allBalmerSeries[pos].number) {
-        found = true;
-      } else pos++;
-    }//while
-    return found;
-  }//duplicateBalmer
-
-  bool duplicatePaschen(){
-    bool found = false;
-    int pos = 0;
-    while (pos < _allPaschenSeries.length && !found) {
-      if (_input_num == _allPaschenSeries[pos].number) {
-        found = true;
-      } else pos++;
-    }//while
-    return found;
-  }//duplicatePashcen
+  } //duplicateSeries
 
   @override
   void initState() {
@@ -59,7 +33,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     final _bottom = MediaQuery.of(context).viewInsets.bottom;
 
     ListView myList = new ListView.builder(
@@ -68,7 +41,6 @@ class _HomeState extends State<Home> {
           return _allSeries[index];
         });
 
-
     return Padding(
       padding: EdgeInsets.only(bottom: _bottom),
       child: Scaffold(
@@ -76,9 +48,8 @@ class _HomeState extends State<Home> {
             title: Text('Series Calculator'),
           ),
           body: Container(
-            height: 500.0,
-            child: myList
-          ),
+              height: MediaQuery.of(context).size.height,
+              child: myList),
           bottomNavigationBar: BottomAppBar(
             child: Form(
                 key: _formKey,
@@ -86,11 +57,30 @@ class _HomeState extends State<Home> {
                   children: <Widget>[
                     Expanded(
                       child: TextFormField(
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (String value) {
+                          if (_formKey.currentState.validate()) {
+                            //Add a new series card
+                            _allSeries.add(seriesCard(context, _inputNum));
+                            _seriesNumbers.add(_inputNum);
+
+                            setState(() {
+                              print('Set state called');
+                              myList = new ListView.builder(
+                                  itemCount: _allSeries.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return _allSeries[index];
+                                  });
+                            });
+                          } else {
+                            //Give a useful error message
+                          }
+                        },
                         validator: (String value) {
+                          _inputNum = toInt(value);
 
-                          _input_num = toInt(value);
-
-                          if (duplicateLyman() || duplicateBalmer() || duplicatePaschen()){
+                          if (duplicateSeries()) {
                             return 'You already have this series!';
                           }
                           return (!isNull(value) && isNumeric(value)
@@ -107,22 +97,16 @@ class _HomeState extends State<Home> {
                         icon: Icon(Icons.chevron_right),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            //Create the series
-                            _allLymanSeries.add(LymanSeries(_input_num));
-                            print('Lyman series added to list');
-                            _allBalmerSeries.add(BalmerSeries(_input_num));
-                            print('Balmer series added to list');
-                            _allPaschenSeries.add(PaschenSeries(_input_num));
-                            print('Paschen series added to list');
-
                             //Add a new series card
-                            _allSeries.add(seriesCard());
+                            _allSeries.add(seriesCard(context, _inputNum));
+                            _seriesNumbers.add(_inputNum);
 
                             setState(() {
                               print('Set state called');
                               myList = new ListView.builder(
                                   itemCount: _allSeries.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return _allSeries[index];
                                   });
                             });

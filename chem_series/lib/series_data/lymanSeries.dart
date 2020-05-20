@@ -9,46 +9,11 @@
 ///means on the level of my brother. I am just providing a better implementation than what
 ///my brother did.
 
-class LymanSeries {
+import 'package:chemseries/series_data/serie.dart';
 
-  //Initializing Rydberg's constant
-  static const double RH = 1.097e7;
+class LymanSeries extends Series {
 
-  //Initializing Plank's constant
-  static const double H = 6.626e-34;
-
-  //Initializing c speed of light constant
-  static const double C = 2.99e8;
-
-  //Data Field
-  int _number;
-  int _nInitial;
-  int _nFinal;
-  List<double> _rawNumber = [];
-  List<double> _energy = [];
-  List<double> _lambda = [];
-  List<double> _frequency = [];
-
-  LymanSeries(this._number);
-
-  set number(int value) {
-    _number = value;
-  }
-
-  int get number => _number;
-
-  List<double> get rawNumber => _rawNumber;
-
-  List<double> get frequency => _frequency;
-
-  List<double> get lambda => _lambda;
-
-  List<double> get energy => _energy;
-
-  int get nFinal => _nFinal;
-
-  int get nInitial => _nInitial;
-
+  LymanSeries (int newNumber) : super(newNumber);
 
   ///Calculate the lines for the Lyman Series.
   ///Using the Rydberg equation 1/lambda = Rh (1/n1^2 - 1/n2^2)
@@ -56,29 +21,32 @@ class LymanSeries {
   ///The equation is re-arranged to solve for lambda in nm.
   void calculateLymanSeries () {
     //Set n(initial)
-    _nInitial = 1;
+    super.nInitial = 1;
 
     //Setting n(final)
-    _nFinal = 1 + _number + 1;
+    super.nFinal = 1 + super.number + 1;
 
-    for (int i = 0; i < _number; i++) {
+    for (int i = 0; i < super.number; i++) {
       //Solving for wavelength, producing a raw_number that mut be converted.
-      double raw =  (1.0 / (RH * (1 - 1.0 / ((1 + _number + 1) * (1 + _number + 1)))));
-      _rawNumber.add(raw);
+      double raw =  (1.0 / (Series.RH * (1 - 1.0 / ((1 + i + 1) * (1 + i + 1)))));
+      rawNumber.add(raw);
 
       //Converting the raw_number to wavelength in nm.
-      _lambda.add(raw * 1.0e9);
+      lambda.add(raw * 1.0e9);
 
       //Calculating frequency by using wavelength in nm using the formula: c/lambda.
       //Where c is the speed of light in a vacuum in meters/seconds.
       //The result is the frequency in l/s or Hz.
-      double tempFrequency = C / raw;
-      _frequency.add(C / raw);
+      double tempFrequency = Series.C / raw;
+      frequency.add(Series.C / raw);
 
       //Calculating frequency by using the formula: E = hf,
       //Where h is planks constant.
       //The result is energy in Joules.
-      _energy.add(tempFrequency * H);
+      energy.add(tempFrequency * Series.H);
+      print(tempFrequency * Series.H);
+
+      currentN.add(i);
     } //for
   }//calculateLymanSeries
 }//class
